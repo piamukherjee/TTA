@@ -108,9 +108,7 @@ where last_name='WILLIAMS' or 'DAVIS';
  from rental
  where date(rental.rental_date)='2005-07-05';
  
- select *
- from customer;
- 
+-- fill in the blanks for this multi-table query to achieve the results shown
 select c.email, r.return_date
 from customer c
 	inner join rental r
