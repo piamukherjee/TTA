@@ -79,3 +79,78 @@ select *,
 from Sales_Fact
 where year_no=2020
 order by month_no;
+
+-- Create a view definition that can be used by the given query to generate given results
+
+use sakila;
+create view film_ctgry_actor
+as
+select c.name as category_name, f.title, a.first_name, a.last_name
+from category c
+	inner join film_category fc
+    on c.category_id = fc.category_id
+    inner join film f
+    on fc.film_id = f.film_id
+    inner join film_actor fa
+    on fa.film_id = f.film_id
+    inner join actor a
+    on fa.actor_id = a.actor_id;
+
+-- check created view
+select *
+from film_ctgry_actor
+where last_name = 'FAWCETT';
+
+-- run query on view to get desired results
+select title, category_name, first_name, last_name
+from film_ctgry_actor
+where last_name = 'FAWCETT';
+
+-- The film rental company manager would like to have a report that includes 
+-- the name of every country, along with the total payments for all customers 
+-- who live in each country.
+-- Generate a view definition that queries the country table and uses a scalar 
+-- subquery to calculate a value for a column named tot_payments
+
+-- this is my working / testing
+create view full_table
+as
+select p.amount, c.country
+	from payment p
+    inner join customer cust
+    on p.customer_id=cust.customer_id
+    inner join address ad
+    on cust.address_id=ad.address_id
+    inner join city cit
+    on ad.city_id = cit.city_id
+    inner join country c
+    on cit.country_id = c.country_id;
+    
+select *
+from full_table;
+
+select country, sum(amount) 
+from full_table
+group by country;
+
+-- putting it together into the final script
+create view rentals_by_country 
+as
+select country, sum(amt) tot_payments
+from 
+  (select p.amount as amt, c.country
+	from payment p
+    inner join customer cust
+    on p.customer_id=cust.customer_id
+    inner join address ad
+    on cust.address_id=ad.address_id
+    inner join city cit
+    on ad.city_id = cit.city_id
+    inner join country c
+    on cit.country_id = c.country_id
+    ) full_table
+group by country
+order by 2;
+
+select *
+from rentals_by_country;
