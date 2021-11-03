@@ -19,7 +19,7 @@ from payment
 group by customer_id
 having count(*)>=5;
 
--- create Table Slaes_Fact in database HLT
+-- create Table Sales_Fact in database HLT
 use HLT;
 
 create table Sales_Fact(
@@ -83,6 +83,7 @@ order by month_no;
 -- Create a view definition that can be used by the given query to generate given results
 
 use sakila;
+
 create view film_ctgry_actor
 as
 select c.name as category_name, f.title, a.first_name, a.last_name
@@ -152,5 +153,6 @@ from
 group by country
 order by 2;
 
+-- check result
 select *
 from rentals_by_country;
